@@ -523,6 +523,29 @@ em {
   border-bottom: 1px solid var(--rule);
 }
 
+.menu-group {
+  margin-top: 30px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--rule);
+  color: var(--red);
+  font: 600 9px/1 'DM Sans', sans-serif;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.veg {
+  display: inline-grid;
+  place-items: center;
+  width: 15px;
+  height: 15px;
+  margin-left: 9px;
+  border: 1px solid var(--red);
+  border-radius: 50%;
+  color: var(--red);
+  font: 600 8px/1 'DM Sans', sans-serif;
+  vertical-align: 3px;
+}
+
 .menu-item h4 {
   margin-bottom: 6px;
   font-size: 20px;

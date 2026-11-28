@@ -1,49 +1,37 @@
 import { FormEvent, useEffect, useState } from 'react'
 import heroImage from './assets/portobello-hero.webp'
 import logo from './assets/portobello-logo.png'
-
-type MenuItem = {
-  name: string
-  description?: string
-  price: string
-}
-
-const menu: Record<string, MenuItem[]> = {
-  Antipasti: [
-    { name: 'Burrata con prosciutto', description: 'Burrata, parmaham, cherrytomaat', price: '15,95' },
-    { name: 'Carpaccio di carne', description: 'Ossenhaas, parmezaan, pijnboompitten, rucola', price: '15,95' },
-    { name: 'Melanzane alla parmigiana', description: 'Aubergine, tomatensaus, parmezaan', price: '13,95' },
-    { name: 'Scampi alla diavolo', description: 'Knoflook, licht pittige tomatensaus', price: '16,75' },
-    { name: 'Antipasto Portobello', description: 'Een selectie Italiaanse vleeswaren', price: '19,50' },
-  ],
-  Pasta: [
-    { name: 'Pasta dello chef', description: 'Ossenhaas, tomaat, room', price: '18,50' },
-    { name: 'Ravioli ricotta e spinaci', description: 'Handgemaakt, salieboter', price: '19,95' },
-    { name: 'Gnocchi alla sorrentina', description: 'Tomaat, mozzarella, basilicum', price: '19,95' },
-    { name: 'Alla puttanesca', description: 'Tomaat, olijf, kappertjes, ansjovis', price: '16,95' },
-    { name: 'Ai funghi porcini', description: 'Eekhoorntjesbrood, room, parmezaan', price: '17,95' },
-  ],
-  Pizza: [
-    { name: 'Portobello', description: 'Champignons, paprika, artisjok, mortadella', price: '16,95' },
-    { name: 'Burrata e crudo di Parma', description: 'Burrata, parmaham, basilicum', price: '17,95' },
-    { name: 'Tartufo e funghi', description: 'Champignons, truffelsaus', price: '16,95' },
-    { name: 'N’duja', description: 'Pittige Calabrese salami', price: '16,95' },
-    { name: 'Marinara', description: 'Mosselen, garnalen, tonijn, inktvis', price: '18,50' },
-  ],
-  Secondi: [
-    { name: 'Saltimbocca alla romana', description: 'Kalfsschnitzel, parmaham, salie, witte wijn', price: '27,50' },
-    { name: 'Filetto ai due pepi', description: 'Ossenhaas, room, twee soorten peper', price: '31,95' },
-    { name: 'Bistecca alla griglia', description: 'Gegrilde steak, rozemarijn', price: '27,50' },
-    { name: 'Scampi alla griglia', description: 'Gegrilde scampi, citroen, peterselie', price: '27,50' },
-    { name: 'Vis van de dag', description: 'Vraag uw ober naar de vangst van vandaag', price: 'dagprijs' },
-  ],
-}
+import { menu, type MenuItem } from './menu'
 
 function Arrow({ down = false }: { down?: boolean }) {
   return (
     <svg className={down ? 'arrow down' : 'arrow'} viewBox="0 0 24 24" aria-hidden="true">
       <path d="M5 12h13M14 7l5 5-5 5" />
     </svg>
+  )
+}
+
+function ItemRows({ items, compact = false }: { items: MenuItem[]; compact?: boolean }) {
+  return (
+    <>
+      {items.map((item, index) => (
+        <div key={item.name}>
+          {item.group && item.group !== items[index - 1]?.group && (
+            <h5 className="menu-group">{item.group}</h5>
+          )}
+          <article className={compact ? 'compact-menu-item' : 'menu-item'}>
+            <div>
+              <h4>
+                {item.name}
+                {item.veg && <span className="veg" title="Vegetarisch">V</span>}
+              </h4>
+              {item.description && <p>{item.description}</p>}
+            </div>
+            <span>{item.price}</span>
+          </article>
+        </div>
+      ))}
+    </>
   )
 }
 
@@ -264,14 +252,14 @@ export default function App() {
           <p className="kicker light">La specialità</p>
           <h2>Pizza met<br /><em>karakter.</em></h2>
           <p>
-            Ruim vijftien variaties, stuk voor stuk vers belegd en gebakken op hoge temperatuur.
+            Vierendertig pizza’s, stuk voor stuk vers belegd en gebakken op hoge temperatuur.
             Van de klassieke Margherita tot onze Portobello met champignons, paprika, artisjok en
             mortadella.
           </p>
           <div className="signature-note">
             <span>Onze favoriet</span>
             <strong>Pizza Portobello</strong>
-            <i>€ 16,95</i>
+            <i>€ 17,95</i>
           </div>
         </div>
       </section>
@@ -304,19 +292,15 @@ export default function App() {
               <h3>{category}</h3>
               <span>Prijs in euro</span>
             </div>
-            {menu[category].map((item) => (
-              <article className="menu-item" key={item.name}>
-                <div>
-                  <h4>{item.name}</h4>
-                  {item.description && <p>{item.description}</p>}
-                </div>
-                <span>{item.price}</span>
-              </article>
-            ))}
+            <ItemRows items={menu[category]} />
           </div>
         </div>
         <div className="menu-footer">
-          <p className="allergen-note">Heeft u een allergie? Laat het ons weten bij uw reservering.</p>
+          <p className="allergen-note">
+            Heeft u een allergie? Laat het ons weten bij uw reservering.
+            <br />
+            Menu en prijzen zoals op pizzeriaportobello.com (november 2026). V = vegetarisch.
+          </p>
           <button className="line-button dark" onClick={() => setFullMenuOpen((open) => !open)}>
             {fullMenuOpen ? 'Sluit volledig overzicht' : 'Bekijk alle categorieën'}
             <Arrow down={!fullMenuOpen} />
@@ -330,15 +314,7 @@ export default function App() {
                   <span>0{index + 1}</span>
                   <h3>{name}</h3>
                 </div>
-                {items.map((item) => (
-                  <article className="compact-menu-item" key={item.name}>
-                    <div>
-                      <h4>{item.name}</h4>
-                      {item.description && <p>{item.description}</p>}
-                    </div>
-                    <span>{item.price}</span>
-                  </article>
-                ))}
+                <ItemRows items={items} compact />
               </section>
             ))}
           </div>
