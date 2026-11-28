@@ -1,0 +1,10 @@
+{
+  "description": "Explore a restaurant’s menu, discover its atmosphere, and find essential dining information to plan a welcoming visit.",
+  "robots": {
+    "index": false
+  },
+  "accessibility": {
+    "addBypassLinks": false,
+    "ignoreReducedMotion": false
+  }
+}
